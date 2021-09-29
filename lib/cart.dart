@@ -44,12 +44,20 @@ class _CartListState extends State<CartList> {
                       onDismissed: (direction) {
                         if(direction == DismissDirection.endToStart) {
                           // Then show a snackbar.
-                          Scaffold.of(context)
-                              .showSnackBar(SnackBar(content: Text(item['name'] + " dismissed"), duration: Duration(seconds: 1)));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(item['name'] + " dismissed"),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
                         } else {
                           // Then show a snackbar.
-                          Scaffold.of(context)
-                              .showSnackBar(SnackBar(content: Text(item['name'] + " added to carts"), duration: Duration(seconds: 1)));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(item['name'] + " added to carts"),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
                         }
                         // Remove the item from the data source.
                         setState(() {
@@ -107,8 +115,12 @@ class _CartListState extends State<CartList> {
                                     child: CachedNetworkImage(
                                       fit: BoxFit.cover,
                                       imageUrl: item['image'],
-                                      placeholder: (context, url) => Center(
-                                          child: CircularProgressIndicator()
+                                      placeholder: (context, url) => Container(
+                                        // FIXME: placeHolder表示中の横幅が規定されていないとエラーになる
+                                        width: 86,
+                                        child: Center(
+                                            child: CircularProgressIndicator()
+                                        ),
                                       ),
                                       errorWidget: (context, url, error) => new Icon(Icons.error),
                                     ),
@@ -128,7 +140,7 @@ class _CartListState extends State<CartList> {
                                         Padding(
                                           padding: const EdgeInsets.only(top: 2.0, bottom: 1),
                                           child: Text('in stock', style: TextStyle(
-                                            color: Theme.of(context).accentColor,
+                                            color: Theme.of(context).colorScheme.secondary,
                                             fontWeight: FontWeight.w700,
                                           )),
                                         )
@@ -198,17 +210,17 @@ class _CartListState extends State<CartList> {
               )
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 20, top: 50, bottom: 10),
-              child: ButtonTheme(
-                buttonColor: Theme.of(context).primaryColor,
-                minWidth: double.infinity,
-                height: 40.0,
-                child: RaisedButton(
-                  onPressed: () {},
-                  child: Text(
-                    "CHECKOUT",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
+              padding: const EdgeInsets.only(
+                  left: 20.0, right: 20, top: 50, bottom: 10),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Theme.of(context).primaryColor,
+                  minimumSize: Size(double.infinity, 40),
+                ),
+                onPressed: () {},
+                child: Text(
+                  "CHECKOUT",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
             ),

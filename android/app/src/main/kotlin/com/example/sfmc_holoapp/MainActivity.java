@@ -1,20 +1,18 @@
 package com.example.sfmc_holoapp;
 
-import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 
-import io.flutter.app.FlutterActivity;
-import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.MethodCall;
-import io.flutter.plugins.GeneratedPluginRegistrant;
-import com.evergage.android.Evergage;
-import com.evergage.android.CampaignHandler;
 import com.evergage.android.Campaign;
+import com.evergage.android.CampaignHandler;
+import com.evergage.android.Evergage;
 import com.evergage.android.Screen;
 
-
 import java.util.Map;
+
+import io.flutter.embedding.android.FlutterActivity;
+import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.plugin.common.MethodChannel;
+import io.flutter.plugins.GeneratedPluginRegistrant;
 
 public class MainActivity extends FlutterActivity {
 
@@ -27,7 +25,7 @@ public class MainActivity extends FlutterActivity {
     private CampaignHandler handler;
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
 
         handler = new CampaignHandler() {
@@ -61,65 +59,61 @@ public class MainActivity extends FlutterActivity {
                 }
             }
         };
-
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        GeneratedPluginRegistrant.registerWith(this);
+    public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
+        GeneratedPluginRegistrant.registerWith(flutterEngine);
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL)
+                .setMethodCallHandler(
+                        (methodCall, result) -> {
+                            Map<String, Object> arguments = methodCall.arguments();
 
-        new MethodChannel(getFlutterView(), CHANNEL).setMethodCallHandler(new MethodChannel.MethodCallHandler(){
-            @Override
-            public void onMethodCall(MethodCall methodCall, MethodChannel.Result result) {
+                            if (methodCall.method.equals("androidInitialize")) {
 
-                Map<String, Object> arguments = methodCall.arguments();
+                                String account = (String) arguments.get("account");
+                                String ds = (String) arguments.get("ds");
 
-                if(methodCall.method.equals("androidInitialize")){
+                                if (myApp == null) {
+                                    myApp = new MyFlutterApplication();
+                                }
 
-                    String account = (String) arguments.get("account");
-                    String ds = (String) arguments.get("ds");
+                                if (myEvg == null) {
+                                    myEvg = myApp.startEvg(account, ds);
+                                }
 
-                    if (myApp == null) {
-                        myApp = new MyFlutterApplication();
-                    }
+                                myScreen = myEvg.getScreenForActivity(thisActivity);
 
-                    if(myEvg == null) {
-                        myEvg = myApp.startEvg(account, ds);
-                    }
+                                String message = "Initialized!!";
+                                result.success(message);
 
-                    myScreen = myEvg.getScreenForActivity(thisActivity);
+                            }
 
-                    String message = "Initialized!!";
-                    result.success(message);
+                            if (methodCall.method.equals("androidLogEvent")) {
 
-                }
+                                String event = (String) arguments.get("event");
+                                String description = (String) arguments.get("description");
+                                String message = null;
 
-                if(methodCall.method.equals("androidLogEvent")) {
+                                if (event.equals("setUserId")) {
+                                    myEvg.setUserId(description);
+                                    message = "Successfully set User Id";
+                                } else {
 
-                    String event = (String) arguments.get("event");
-                    String description = (String) arguments.get("description");
-                    String message = null;
+                                    myScreen = myApp.refreshScreen(event, description, myScreen);
 
-                    if(event.equals("setUserId")) {
-                        myEvg.setUserId(description);
-                        message = "Successfully set User Id";
-                    }else {
-
-                        myScreen = myApp.refreshScreen(event, description, myScreen);
-
-                        myScreen.setCampaignHandler(handler, "selectedProduct");
+                                    myScreen.setCampaignHandler(handler, "selectedProduct");
 
 
-                        if (activeCampaign != null) {
-                            message = "Campaign: " + activeCampaign.getCampaignName() + " For target: " + activeCampaign.getTarget() + " With data: " + activeCampaign.getData();
-                        } else {
-                            message = "No Campaign Returned";
+                                    if (activeCampaign != null) {
+                                        message = "Campaign: " + activeCampaign.getCampaignName() + " For target: " + activeCampaign.getTarget() + " With data: " + activeCampaign.getData();
+                                    } else {
+                                        message = "No Campaign Returned";
+                                    }
+                                }
+                                result.success(message);
+                            }
                         }
-                    }
-                    result.success(message);
-                }
-            }
-        });
+                );
     }
 }

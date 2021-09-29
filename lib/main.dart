@@ -30,7 +30,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
  static Locale locale = Locale('en');
- static const platform = const MethodChannel('demo.sfmc_holoapp/info'); 
+ static const platform = const MethodChannel('demo.sfmc_holoapp/info');
  String _message;
 
   @override
@@ -38,8 +38,8 @@ class _MyAppState extends State<MyApp> {
 
     _androidInitialize().then((String message){
       setState(() {
-        _message = message;        
-      });   
+        _message = message;
+      });
    });
 
    super.initState();
@@ -48,6 +48,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ThemeData(
+      fontFamily: locale.languageCode == 'ar' ? 'Dubai' : 'Lato',
+    );
     return MultiProvider(
       providers: [ChangeNotifierProvider<AuthBlock>.value(value: AuthBlock())],
       child: MaterialApp(
@@ -59,10 +62,16 @@ class _MyAppState extends State<MyApp> {
         supportedLocales: [Locale('en'), Locale('ar')],
         locale: locale,
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-            primaryColor: Colors.lightBlue[700],
-            accentColor: Colors.lightBlue[900],
-            fontFamily: locale.languageCode == 'ar' ? 'Dubai' : 'Lato'),
+        theme: theme.copyWith(
+          colorScheme: theme.colorScheme.copyWith(
+            primary: Colors.lightBlue[700],
+            secondary: Colors.lightBlue[900],
+          ),
+        ),
+        // theme: ThemeData(
+        //     primaryColor: Colors.lightBlue[700],
+        //     accentColor: Colors.lightBlue[900],
+        //     fontFamily: locale.languageCode == 'ar' ? 'Dubai' : 'Lato'),
         initialRoute: '/',
         routes: <String, WidgetBuilder>{
           '/': (BuildContext context) => Home(_androidLogEvent, _registerTap),
@@ -81,8 +90,8 @@ class _MyAppState extends State<MyApp> {
   void _registerTap(String tapEvent, String tapDescription, Function androidLogEvent) {
     androidLogEvent(tapEvent, tapDescription).then((String message){
       setState(() {
-        _message = message;        
-      });   
+        _message = message;
+      });
    });
   }
 
@@ -120,6 +129,6 @@ class _MyAppState extends State<MyApp> {
     }
 
     return value;
-  }    
+  }
 
 }

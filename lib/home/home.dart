@@ -17,16 +17,16 @@ class Home extends StatefulWidget {
 }
 
 
-class Product 
+class Product
 {
   String productName;
   String productImage;
-  
+
   Product(this.productName, this.productImage);
 }
 
 class _HomeState extends State<Home> {
- /* 
+ /*
   final List<String> imgList = [
     'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
     'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
@@ -41,7 +41,7 @@ class _HomeState extends State<Home> {
       Product('Cloud Travel','https://cumulus-fs.s3.amazonaws.com/images/credit-card-travel-no-logo.png'),
       Product('Cloud Plus','https://cumulus-fs.s3.amazonaws.com/images/credit-card-cloud-plus-no-logo.png'),
       Product('Cloud Freedom','https://cumulus-fs.s3.amazonaws.com/images/credit-card-freedom-no-logo.png'),
-      Product('Cloud Student','https://cumulus-fs.s3.amazonaws.com/images/credit-card-student-no-logo.png'),      
+      Product('Cloud Student','https://cumulus-fs.s3.amazonaws.com/images/credit-card-student-no-logo.png'),
   ];
 
   final List<String> imgList2 = [
@@ -61,7 +61,7 @@ class _HomeState extends State<Home> {
 
   final Function _androidLogEvent;
   final Function _registerTap;
-  String _message; 
+  String _message;
 
   @override
   _HomeState(this._androidLogEvent, this._registerTap);
@@ -85,7 +85,7 @@ class _HomeState extends State<Home> {
         top: false,
         left: false,
         right: false,
-        
+
         child: CustomScrollView(
             // Add the app bar and list of items as slivers in the next steps.
             slivers: <Widget>[
@@ -100,7 +100,7 @@ class _HomeState extends State<Home> {
                     onPressed: () {},
                   )
                 ],
-                
+
                 // Allows the user to reveal the app bar if they begin scrolling
                 // back up the list of items.
                 // floating: true,
@@ -127,7 +127,7 @@ class _HomeState extends State<Home> {
                             AppLocalizations.of(context)
                                 .translate('NEW_ARRIVALS'),
                             style: TextStyle(
-                                color: Theme.of(context).accentColor,
+                                color: Theme.of(context).colorScheme.secondary,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700)),
                       ),
@@ -179,7 +179,7 @@ class _HomeState extends State<Home> {
                                             subtitle: Text('\Find out more!',
                                                 style: TextStyle(
                                                     color: Theme.of(context)
-                                                        .accentColor,
+                                                        .colorScheme.secondary,
                                                     fontWeight:
                                                         FontWeight.w700)),
                                           )
@@ -208,20 +208,23 @@ class _HomeState extends State<Home> {
                                 top: 8.0, left: 8.0, right: 8.0),
                             child: Text('Shop By Category',
                                 style: TextStyle(
-                                    color: Theme.of(context).accentColor,
+                                    color: Theme.of(context).colorScheme.secondary,
                                     fontSize: 18,
                                     fontWeight: FontWeight.w700)),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
                                 right: 8.0, top: 8.0, left: 8.0),
-                            child: RaisedButton(
-                                color: Theme.of(context).primaryColor,
-                                child: Text('View All',
-                                    style: TextStyle(color: Colors.white)),
-                                onPressed: () {
-                                  Navigator.pushNamed(context, '/categorise');
-                                }),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Theme.of(context).primaryColor,
+                              ),
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/categorise');
+                              },
+                              child: Text('View All',
+                                  style: TextStyle(color: Colors.white)),
+                            ),
                           )
                         ],
                       ),

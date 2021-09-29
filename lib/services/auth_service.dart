@@ -10,7 +10,7 @@ class AuthService {
   final storage = FlutterSecureStorage();
   // Create storage
   Future<Map> login(UserCredential userCredential) async {
-    final response = await http.post('$BASE_URL/jwt-auth/v1/token', body: {
+    final response = await http.post(Uri.tryParse('$BASE_URL/jwt-auth/v1/token'), body: {
       'username': userCredential.usernameOrEmail,
       'password': userCredential.password
     });
@@ -26,7 +26,7 @@ class AuthService {
             msg: "Invalid Credentials",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
-            timeInSecForIos: 1,
+            timeInSecForIosWeb: 1,
             fontSize: 16.0);
       }
       // If that call was not successful, throw an error.
@@ -36,7 +36,7 @@ class AuthService {
   }
 
   Future<Map> register(User user) async {
-    final response = await http.post('$BASE_URL/tradebakerz/wc/v1/register',
+    final response = await http.post(Uri.tryParse('$BASE_URL/tradebakerz/wc/v1/register'),
         body: {
           'username': user.username,
           'password': user.password,
@@ -52,7 +52,7 @@ class AuthService {
             msg: 'Email already exist',
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
-            timeInSecForIos: 1,
+            timeInSecForIosWeb: 1,
             fontSize: 16.0);
       }
       // If that call was not successful, throw an error.
