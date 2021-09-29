@@ -87,21 +87,29 @@ class _SignInState extends State<SignIn> {
                       child: Consumer<AuthBlock>(
                         builder:
                             (BuildContext context, AuthBlock auth, Widget child) {
-                          return RaisedButton(
-                            color: Theme.of(context).primaryColor,
-                            textColor: Colors.white,
-                            child: auth.loading && auth.loadingType == 'login' ? CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                            ) : Text('Sign In'),
+                          return ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Theme.of(context).primaryColor,
+                              textStyle: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
                             onPressed: () {
                               // Validate form
-                              if (_formKey.currentState.validate() && !auth.loading) {
+                              if (_formKey.currentState.validate() &&
+                                  !auth.loading) {
                                 // Update values
                                 _formKey.currentState.save();
                                 // Hit Api
                                 auth.login(userCredential);
                               }
                             },
+                            child: auth.loading && auth.loadingType == 'login'
+                                ? CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white),
+                            )
+                                : Text('Sign In'),
                           );
                         },
                       ),

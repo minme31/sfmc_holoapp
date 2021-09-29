@@ -131,23 +131,29 @@ class _SignUpState extends State<SignUp> {
                       height: 50,
                       child: Consumer<AuthBlock>(builder:
                           (BuildContext context, AuthBlock auth, Widget child) {
-                        return RaisedButton(
-                          color: Theme.of(context).primaryColor,
-                          textColor: Colors.white,
-                          child: auth.loading && auth.loadingType == 'register' ? CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                          ) : Text('Sign Up'),
+                        return ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Theme.of(context).primaryColor,
+                            textStyle: TextStyle(color: Colors.white),
+                          ),
                           onPressed: () {
-                            if (_formKey.currentState.validate() && !auth.loading) {
+                            if (_formKey.currentState.validate() &&
+                                !auth.loading) {
                               _formKey.currentState.save();
                               // If the form is valid, display a snackbar. In the real world,
-                              // you'd often call a server or save the information in a database.                              
+                              // you'd often call a server or save the information in a database.
                               auth.register(user);
 
                               //Call Interation Studio here to set user credentials
                               // ...
                             }
                           },
+                          child: auth.loading && auth.loadingType == 'register'
+                              ? CircularProgressIndicator(
+                            valueColor:
+                            AlwaysStoppedAnimation<Color>(Colors.white),
+                          )
+                              : Text('Sign Up'),
                         );
                       }),
                     ),

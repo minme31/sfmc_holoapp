@@ -135,16 +135,15 @@ class _ShopSearchState extends State<ShopSearch> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      ButtonTheme(
-                        buttonColor: Theme.of(context).primaryColor,
-                        minWidth: double.infinity,
-                        height: 40.0,
-                        child: RaisedButton(
-                          onPressed: () {},
-                          child: Text(
-                            "Apply Filters",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Theme.of(context).primaryColor,
+                          minimumSize: Size(double.infinity, 40),
+                        ),
+                        onPressed: () {},
+                        child: Text(
+                          "Apply Filters",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                       ),
                     ],
