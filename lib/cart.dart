@@ -115,8 +115,12 @@ class _CartListState extends State<CartList> {
                                     child: CachedNetworkImage(
                                       fit: BoxFit.cover,
                                       imageUrl: item['image'],
-                                      placeholder: (context, url) => Center(
-                                          child: CircularProgressIndicator()
+                                      placeholder: (context, url) => Container(
+                                        // FIXME: placeHolder表示中の横幅が規定されていないとエラーになる
+                                        width: 86,
+                                        child: Center(
+                                            child: CircularProgressIndicator()
+                                        ),
                                       ),
                                       errorWidget: (context, url, error) => new Icon(Icons.error),
                                     ),
