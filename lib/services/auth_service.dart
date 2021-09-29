@@ -26,7 +26,7 @@ class AuthService {
             msg: "Invalid Credentials",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
-            timeInSecForIos: 1,
+            timeInSecForIosWeb: 1,
             fontSize: 16.0);
       }
       // If that call was not successful, throw an error.
@@ -52,7 +52,7 @@ class AuthService {
             msg: 'Email already exist',
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
-            timeInSecForIos: 1,
+            timeInSecForIosWeb: 1,
             fontSize: 16.0);
       }
       // If that call was not successful, throw an error.
