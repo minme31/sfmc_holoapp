@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:sfmc_holoapp/auth/auth.dart';
 import 'package:sfmc_holoapp/blocks/auth_block.dart';
 import 'package:sfmc_holoapp/cart.dart';
@@ -11,10 +12,8 @@ import 'package:sfmc_holoapp/product_detail.dart';
 import 'package:sfmc_holoapp/settings.dart';
 import 'package:sfmc_holoapp/shop/shop.dart';
 import 'package:sfmc_holoapp/wishlist.dart';
-import 'package:provider/provider.dart';
 
 void main() {
-
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(MyApp());
@@ -28,22 +27,19 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
- static Locale locale = Locale('en');
- static const platform = const MethodChannel('demo.sfmc_holoapp/info');
- String _message;
+  static Locale locale = Locale('en');
+  static const platform = const MethodChannel('demo.sfmc_holoapp/info');
+  String _message;
 
   @override
-  void initState(){
-
-    _androidInitialize().then((String message){
+  void initState() {
+    _androidInitialize().then((String message) {
       setState(() {
         _message = message;
       });
-   });
+    });
 
-   super.initState();
-
+    super.initState();
   }
 
   @override
@@ -75,7 +71,8 @@ class _MyAppState extends State<MyApp> {
         initialRoute: '/',
         routes: <String, WidgetBuilder>{
           '/': (BuildContext context) => Home(_androidLogEvent, _registerTap),
-          '/auth': (BuildContext context) => Auth(_androidLogEvent, _registerTap),
+          '/auth': (BuildContext context) =>
+              Auth(_androidLogEvent, _registerTap),
           '/shop': (BuildContext context) => Shop(),
           '/categorise': (BuildContext context) => Categorise(),
           '/wishlist': (BuildContext context) => WishList(),
@@ -87,17 +84,17 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  void _registerTap(String tapEvent, String tapDescription, Function androidLogEvent) {
-    androidLogEvent(tapEvent, tapDescription).then((String message){
+  void _registerTap(
+      String tapEvent, String tapDescription, Function androidLogEvent) {
+    androidLogEvent(tapEvent, tapDescription).then((String message) {
       setState(() {
         _message = message;
       });
-   });
+    });
   }
 
   Future<String> _androidInitialize() async {
-
-    var sendMap = <String, dynamic> {
+    var sendMap = <String, dynamic>{
       'account': 'interactionstudio',
       'ds': 'mmukherjee_sandbox',
     };
@@ -106,15 +103,16 @@ class _MyAppState extends State<MyApp> {
     try {
       value = await platform.invokeMethod('androidInitialize', sendMap);
       print("initialize: " + value.toString());
-    } catch (e){
+    } catch (e) {
       print(e);
     }
 
     return value;
   }
 
-  Future<String> _androidLogEvent(String tapEvent, String tapDescription) async {
-    var sendMap = <String, dynamic> {
+  Future<String> _androidLogEvent(
+      String tapEvent, String tapDescription) async {
+    var sendMap = <String, dynamic>{
       'event': tapEvent,
       'description': tapDescription,
     };
@@ -123,12 +121,10 @@ class _MyAppState extends State<MyApp> {
     try {
       value = await platform.invokeMethod('androidLogEvent', sendMap);
       print("log event: " + value.toString());
-
-    } catch (e){
+    } catch (e) {
       print(e);
     }
 
     return value;
   }
-
 }

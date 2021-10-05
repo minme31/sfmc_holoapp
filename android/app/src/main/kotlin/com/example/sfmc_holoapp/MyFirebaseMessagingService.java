@@ -1,7 +1,7 @@
 package com.example.sfmc_holoapp;
 import com.evergage.android.Evergage;
 
-import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService;
+import io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingService;
 
 public class MyFirebaseMessagingService extends FlutterFirebaseMessagingService {
 

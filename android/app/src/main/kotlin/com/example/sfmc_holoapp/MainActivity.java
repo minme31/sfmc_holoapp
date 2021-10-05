@@ -1,11 +1,17 @@
 package com.example.sfmc_holoapp;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.evergage.android.Campaign;
 import com.evergage.android.CampaignHandler;
+import com.evergage.android.ClientConfiguration;
 import com.evergage.android.Evergage;
 import com.evergage.android.Screen;
+import com.evergage.android.promote.Category;
+import com.evergage.android.promote.Product;
+import com.evergage.android.promote.Tag;
 
 import java.util.Map;
 
@@ -16,6 +22,7 @@ import io.flutter.plugins.GeneratedPluginRegistrant;
 
 public class MainActivity extends FlutterActivity {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     private static final String CHANNEL = "demo.sfmc_holoapp/info";
     private FlutterActivity thisActivity = this;
     private MyFlutterApplication myApp;
@@ -28,10 +35,13 @@ public class MainActivity extends FlutterActivity {
     public void onStart() {
         super.onStart();
 
+        myEvg = Evergage.getInstance();
+        myScreen = myEvg.getScreenForActivity(this);
         handler = new CampaignHandler() {
 
             @Override
             public void handleCampaign(@NonNull Campaign campaign) {
+                Log.i(TAG, "handleCampaign: " + campaign.getData());
                 // Validate the campaign data since it's dynamic JSON. Avoid processing if fails.
                 String featuredProductName = campaign.getData().optString("productSelected");
                 if (featuredProductName == null || featuredProductName.isEmpty()) {
@@ -59,6 +69,23 @@ public class MainActivity extends FlutterActivity {
                 }
             }
         };
+        myScreen.setCampaignHandler(handler, "selectedProduct");
+        // App Foreground Action
+        myScreen.trackAction("App Foreground");
+    }
+
+    @Override
+    protected void onResume() {
+        Log.i(TAG, "onResume: ");
+        // myScreen.trackAction("App Foreground");
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.i(TAG, "onStop: ");
+        // myScreen.trackAction("App Background");
+        super.onStop();
     }
 
     @Override
@@ -71,22 +98,27 @@ public class MainActivity extends FlutterActivity {
 
                             if (methodCall.method.equals("androidInitialize")) {
 
-                                String account = (String) arguments.get("account");
-                                String ds = (String) arguments.get("ds");
+                                // String account = (String) arguments.get("account");
+                                // String ds = (String) arguments.get("ds");
 
-                                if (myApp == null) {
-                                    myApp = new MyFlutterApplication();
-                                }
+                                // NOTE: MyFlutterApplication() は、Androidシステムによって呼び出されるので、
+                                //       newしてインスタンス化するのは非推奨です。
 
-                                if (myEvg == null) {
-                                    myEvg = myApp.startEvg(account, ds);
-                                }
+                                // if (myApp == null) {
+                                //     myApp = new MyFlutterApplication();
+                                // }
+
+                                // NOTE: evergage.startはApplication.onCreateで行うことが推奨されていたため、移動しました。
+                                //       MethodChannelのトリガで行いたい場合はMainActivityにstartEvgメソッドを作り、呼び出してください。
+
+                                // if (myEvg == null) {
+                                //     myEvg = myApp.startEvg(account, ds);
+                                // }
 
                                 myScreen = myEvg.getScreenForActivity(thisActivity);
 
                                 String message = "Initialized!!";
                                 result.success(message);
-
                             }
 
                             if (methodCall.method.equals("androidLogEvent")) {
@@ -100,10 +132,7 @@ public class MainActivity extends FlutterActivity {
                                     message = "Successfully set User Id";
                                 } else {
 
-                                    myScreen = myApp.refreshScreen(event, description, myScreen);
-
-                                    myScreen.setCampaignHandler(handler, "selectedProduct");
-
+                                    myScreen = refreshScreen(event, description, myScreen);
 
                                     if (activeCampaign != null) {
                                         message = "Campaign: " + activeCampaign.getCampaignName() + " For target: " + activeCampaign.getTarget() + " With data: " + activeCampaign.getData();
@@ -115,5 +144,37 @@ public class MainActivity extends FlutterActivity {
                             }
                         }
                 );
+    }
+
+    public Screen refreshScreen(String event, String description, Screen screen) {
+        // Evergage track screen view
+        //final Screen screen = myEvg.getScreenForActivity(fa);
+
+        if (screen != null) {
+            // If screen is viewing a product:
+            //screen.viewItem(new Product("p123"));
+
+            // If screen is viewing a category, like women's merchandise:
+            //screen.viewCategory(new Category("Womens"));
+
+            // Or if screen is viewing a tag, like some specific brand:
+            //screen.viewTag(new Tag("SomeBrand", Tag.Type.Brand));
+
+            switch(event){
+                case "trackAction":
+                    screen.trackAction(description);
+                    break;
+                case "viewItem":
+                    screen.viewItem(new Product(description));
+                    break;
+                case "viewCategory":
+                    screen.viewCategory(new Category(description));
+                    break;
+                case "viewTag":
+                    screen.viewTag(new Tag(description, Tag.Type.Brand));
+                    break;
+            }
+        }
+        return screen;
     }
 }

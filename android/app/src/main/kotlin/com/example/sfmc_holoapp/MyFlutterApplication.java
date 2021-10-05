@@ -28,6 +28,9 @@ public class MyFlutterApplication extends FlutterApplication {
 
         // Initialize Evergage:
         Evergage.initialize(this);
+
+        // NOTE: MethodChannelで行われていたstartEvgを移動しました。
+        startEvg("interactionstudio", "mmukherjee_sandbox");
     }
 
     public Evergage startEvg(String account, String ds) {
