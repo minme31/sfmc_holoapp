@@ -70,7 +70,8 @@ class _MyAppState extends State<MyApp> {
         //     fontFamily: locale.languageCode == 'ar' ? 'Dubai' : 'Lato'),
         initialRoute: '/',
         routes: <String, WidgetBuilder>{
-          '/': (BuildContext context) => Home(_androidLogEvent, _registerTap),
+          '/': (BuildContext context) =>
+              Home(_androidLogEvent, _registerTap, _message),
           '/auth': (BuildContext context) =>
               Auth(_androidLogEvent, _registerTap),
           '/shop': (BuildContext context) => Shop(),

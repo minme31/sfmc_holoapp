@@ -6,19 +6,17 @@ import 'drawer.dart';
 import 'slider.dart';
 
 class Home extends StatefulWidget {
-
   final Function androidLogEvent;
   final Function registerTap;
+  final String message;
 
-  Home(this.androidLogEvent, this.registerTap);
+  Home(this.androidLogEvent, this.registerTap, this.message);
 
   @override
   _HomeState createState() => _HomeState(androidLogEvent, registerTap);
 }
 
-
-class Product
-{
+class Product {
   String productName;
   String productImage;
 
@@ -26,7 +24,7 @@ class Product
 }
 
 class _HomeState extends State<Home> {
- /*
+  /*
   final List<String> imgList = [
     'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
     'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
@@ -38,25 +36,29 @@ class _HomeState extends State<Home> {
 */
 
   final List<Product> imgList = [
-      Product('Cloud Travel','https://cumulus-fs.s3.amazonaws.com/images/credit-card-travel-no-logo.png'),
-      Product('Cloud Plus','https://cumulus-fs.s3.amazonaws.com/images/credit-card-cloud-plus-no-logo.png'),
-      Product('Cloud Freedom','https://cumulus-fs.s3.amazonaws.com/images/credit-card-freedom-no-logo.png'),
-      Product('Cloud Student','https://cumulus-fs.s3.amazonaws.com/images/credit-card-student-no-logo.png'),
+    Product('Cloud Travel',
+        'https://cumulus-fs.s3.amazonaws.com/images/credit-card-travel-no-logo.png'),
+    Product('Cloud Plus',
+        'https://cumulus-fs.s3.amazonaws.com/images/credit-card-cloud-plus-no-logo.png'),
+    Product('Cloud Freedom',
+        'https://cumulus-fs.s3.amazonaws.com/images/credit-card-freedom-no-logo.png'),
+    Product('Cloud Student',
+        'https://cumulus-fs.s3.amazonaws.com/images/credit-card-student-no-logo.png'),
   ];
 
   final List<String> imgList2 = [
-      'https://cumulus-fs.s3.amazonaws.com/images/banking-checking.png',
-      'https://cumulus-fs.s3.amazonaws.com/images/banking-checking.png',
-      'https://cumulus-fs.s3.amazonaws.com/images/banking-checking.png',
-      'https://cumulus-fs.s3.amazonaws.com/images/banking-checking.png',
-      'https://cumulus-fs.s3.amazonaws.com/images/banking-checking.png',
+    'https://cumulus-fs.s3.amazonaws.com/images/banking-checking.png',
+    'https://cumulus-fs.s3.amazonaws.com/images/banking-checking.png',
+    'https://cumulus-fs.s3.amazonaws.com/images/banking-checking.png',
+    'https://cumulus-fs.s3.amazonaws.com/images/banking-checking.png',
+    'https://cumulus-fs.s3.amazonaws.com/images/banking-checking.png',
   ];
 
   final List<String> imgList3 = [
-      'Banking',
-      'Borrowing',
-      'Credit Cards',
-      'Investing',
+    'Banking',
+    'Borrowing',
+    'Credit Cards',
+    'Investing',
   ];
 
   final Function _androidLogEvent;
@@ -67,12 +69,10 @@ class _HomeState extends State<Home> {
   _HomeState(this._androidLogEvent, this._registerTap);
 
   @override
-  void initState(){
+  void initState() {
+    _registerTap('trackAction', 'App: Homepage Visit', _androidLogEvent);
 
-    _registerTap('trackAction','App: Homepage Visit', _androidLogEvent);
-
-   super.initState();
-
+    super.initState();
   }
 
   @override
@@ -85,11 +85,11 @@ class _HomeState extends State<Home> {
         top: false,
         left: false,
         right: false,
-
         child: CustomScrollView(
             // Add the app bar and list of items as slivers in the next steps.
             slivers: <Widget>[
               SliverAppBar(
+                title: Text(widget.message),
                 backgroundColor: Colors.blue,
                 // Provide a standard title.
                 // title: Text('asdas'),
@@ -145,7 +145,10 @@ class _HomeState extends State<Home> {
                                     clipBehavior: Clip.antiAlias,
                                     child: InkWell(
                                       onTap: () {
-                                        _registerTap('trackAction','App: ' + i.productName, _androidLogEvent);
+                                        _registerTap(
+                                            'trackAction',
+                                            'App: ' + i.productName,
+                                            _androidLogEvent);
                                         Navigator.pushNamed(
                                             context, '/products',
                                             arguments: i.productImage);
@@ -179,7 +182,8 @@ class _HomeState extends State<Home> {
                                             subtitle: Text('\Find out more!',
                                                 style: TextStyle(
                                                     color: Theme.of(context)
-                                                        .colorScheme.secondary,
+                                                        .colorScheme
+                                                        .secondary,
                                                     fontWeight:
                                                         FontWeight.w700)),
                                           )
@@ -197,7 +201,8 @@ class _HomeState extends State<Home> {
                         child: Padding(
                           padding:
                               EdgeInsets.only(top: 6.0, left: 8.0, right: 8.0),
-                          child: new Image.network('https://cumulus-fs.s3.amazonaws.com/images/ads/banner-credit-card-finder.jpg'),
+                          child: new Image.network(
+                              'https://cumulus-fs.s3.amazonaws.com/images/ads/banner-credit-card-finder.jpg'),
                         ),
                       ),
                       Row(
@@ -208,7 +213,8 @@ class _HomeState extends State<Home> {
                                 top: 8.0, left: 8.0, right: 8.0),
                             child: Text('Shop By Category',
                                 style: TextStyle(
-                                    color: Theme.of(context).colorScheme.secondary,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
                                     fontSize: 18,
                                     fontWeight: FontWeight.w700)),
                           ),
@@ -282,7 +288,8 @@ class _HomeState extends State<Home> {
                         child: Padding(
                           padding: EdgeInsets.only(
                               top: 6.0, left: 8.0, right: 8.0, bottom: 10),
-                          child: new Image.network('https://cumulus-fs.s3.amazonaws.com/images/ads/banner-credit-card-finder.jpg'),
+                          child: new Image.network(
+                              'https://cumulus-fs.s3.amazonaws.com/images/ads/banner-credit-card-finder.jpg'),
                         ),
                       )
                     ],
